@@ -1,35 +1,35 @@
 .Blog__Avatar {
-    transition: all 0.2s ease-out;
-    overflow: hidden;
-    border-radius: 100%;
-    border: 2px solid white;
-    width: 50px;
-    box-sizing: border-box;
-    display: inline-block;
-    vertical-align: middle;
-  }
+  transition: all 0.2s ease-out;
+  overflow: hidden;
+  border-radius: 100%;
+  border: 2px solid white;
+  width: 50px;
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: middle; }
 
 .BlogIndex__CommentCount {
-    font-weight: bold;
-}
+  font-weight: bold; }
 
 .BlogIndex__Date {
-    font-weight: bold;
-}
+  font-weight: bold; }
 
 .BlogIndex__AuthorName {
-    font-weight: bold;
-}
+  font-weight: bold; }
 
 .BlogIndex__Title {
-    font-size: 1em;
-}
+  font-size: 1em; }
 
 .BlogIndex__ReadMore {
-    margin-top: 20px
-}
+  margin-top: 20px; }
 
 .BlogIndex__Post {
-    border-bottom: 1px solid gray;
-    padding: 20px 0;
-}
+  border-bottom: 1px solid gray;
+  padding: 20px 0; }
+
+.BlogIndex__Pagination {
+  font-size: 20px;
+  margin: 20px 0; }
+  .BlogIndex__Pagination .page-number {
+    display: inline-block;
+    margin: 0 5px; }
