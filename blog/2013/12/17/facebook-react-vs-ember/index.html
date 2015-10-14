@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Facebook React vs. Ember | Instructure Open Source</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Edited Jan 13, 2014 with minor changes which allow for testing timeouts in Ember.
+
+We engineers at Instructure love Ember. We also love to learn about other frameworks and know which tools are the bes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Facebook React vs. Ember">
+<meta property="og:url" content="http://instructure.github.io/blog/2013/12/17/facebook-react-vs-ember/index.html">
+<meta property="og:site_name" content="Instructure Open Source">
+<meta property="og:description" content="Edited Jan 13, 2014 with minor changes which allow for testing timeouts in Ember.
+
+We engineers at Instructure love Ember. We also love to learn about other frameworks and know which tools are the bes">
+<meta property="og:updated_time" content="2015-10-14T13:29:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Facebook React vs. Ember">
+<meta name="twitter:description" content="Edited Jan 13, 2014 with minor changes which allow for testing timeouts in Ember.
+
+We engineers at Instructure love Ember. We also love to learn about other frameworks and know which tools are the bes">
+  
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/js/app.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogHeader.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogIndex.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogPost.css" type="text/css">
+  
+
+</head>
+
+<body>
+  <div id="fb-root"></div>
+  <header class='BlogHeader__Container row'>
+  <div class='col-xs-12'>
+    <div class='BlogHeader__ColorStrip' />
+  </div>
+  <div class='row'>
+    <div class='col-xs-3'>
+      <a href='/'>
+        <div class='BlogHeader__Logo'></div>
+        <span class='sr-only'>Instructure Engineering</span>
+      </a>
+    </div>
+    <div class='col-xs-3 col-xs-offset-6'>
+      <div class='BlogHeader__Links'>
+        <ul class='BlogHeader__Links-List list-unstyled'>
+          <li><a href='/blog'>Tech Blog</a></li>
+          <li><a href='http://www.instructure.com/careers/'>Work Here</a></li>
+        </ul>
+      </div>
+    </div>
+</header>
+  <div class="outer">
+    <div class="inner">
+      <div class="row center-xs">
+  <div class="col-xs-8">
+    <div class="row start-xs">
+      <div class="col-xs-12">
+        <article class="BlogPost">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header">
+                <div class="BlogPost__Header-Title">
+                  <h1 itemprop="name">
+                    <a href="/blog/2013/12/17/facebook-react-vs-ember/">Facebook React vs. Ember</a>
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header-Date">
+                <a href="/blog/2013/12/17/facebook-react-vs-ember/">
+                  <time datetime="2013-12-17T15:54:00.000Z" itemprop="datePublished">Dec 17, 2013</time>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Content" itemprop="articleBody">
+                <div class="comment">Edited Jan 13, 2014 with minor changes which allow for testing timeouts in Ember.</div>
+
+<p>We engineers at Instructure love <a href="http://www.emberjs.com" target="_blank" rel="external">Ember</a>. We also love to learn about other frameworks and know which tools are the best for the job at hand. One of the newer frameworks to come out is React.</p>
+<p><a href="http://facebook.github.io/react/" target="_blank" rel="external">React</a> is Facebook’s new JavaScript library for building user interfaces. I’m excited to see another player in the game of front-end JS frameworks. When we have so much mind share going to a similar problem, we all win.</p>
+<p>On the home page <a href="/images/posts/react-website.png">(screenshot)</a>, there are a few examples of how React can be used. I thought it might be fun to show how each of these can be done using Ember.</p>
+<a id="more"></a>
+<h2 id="A_Simple_Component">A Simple Component</h2><p>React components take data and return content which is to be displayed. Here’s their example code:</p>
+
+<!--￼0-->
+
+
+<p>Let’s build this in Ember. For something as simple as this example, a <a href="http://emberjs.com/guides/templates/writing-helpers/" target="_blank" rel="external">Handlebars Helper</a> will do the trick.</p>
+
+<!--￼1-->
+
+
+<h3 id="Example:">Example:</h3><p><a class="jsbin-embed" href="http://jsbin.com/ecAJuxE/4/edit?html,js,output" target="_blank" rel="external">Facebook React vs Ember</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h2 id="A_Stateful_Component">A Stateful Component</h2><p>The stateful component example on the React page is cool. It tracks the elapsed time on a page (since refresh). Here’s their code:</p>
+<figure class="highlight js"><figcaption><span>React</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Timer = React.createClass(&#123;</span><br><span class="line">  getInitialState: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;secondsElapsed: <span class="number">0</span>&#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">  tick: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;secondsElapsed: <span class="keyword">this</span>.state.secondsElapsed + <span class="number">1</span>&#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">  componentDidMount: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.interval = setInterval(<span class="keyword">this</span>.tick, <span class="number">1000</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">  componentWillUnmount: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    clearInterval(<span class="keyword">this</span>.interval);</span><br><span class="line">  &#125;,</span><br><span class="line">  render: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> React.DOM.div(&#123;&#125;,</span><br><span class="line">      <span class="string">'Seconds Elapsed: '</span> + <span class="keyword">this</span>.state.secondsElapsed</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>Since we are maintaining state within the component itself, let’s build it using an Ember Component.</p>
+<figure class="highlight js"><figcaption><span>Ember</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">App.TimeOnPageComponent = Em.Component.extend(&#123;</span><br><span class="line">  secondsViewed: <span class="number">0</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Increment the secondsViewed attribute</span></span><br><span class="line">  tick: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.incrementProperty(<span class="string">'secondsViewed'</span>);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  onInterval: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    Ember.run(<span class="keyword">this</span>, <span class="keyword">this</span>.tick);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Initiates timer when element is rendered</span></span><br><span class="line">  startTimer: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>._interval = setInterval(<span class="keyword">this</span>.onInterval.bind(<span class="keyword">this</span>), <span class="number">1000</span>);</span><br><span class="line">  &#125;.on(<span class="string">'didInsertElement'</span>),</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Ensure that the timer stops when closed</span></span><br><span class="line">  clearInterval: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    clearInterval(<span class="keyword">this</span>._interval);</span><br><span class="line">    <span class="keyword">this</span>._interval = <span class="literal">null</span>;</span><br><span class="line">  &#125;.on(<span class="string">'willDestroyElement'</span>)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="Example:-1">Example:</h3><p><a class="jsbin-embed" href="http://jsbin.com/OPeVeted/6/embed?js,output" target="_blank" rel="external">Facebook React vs Ember</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h2 id="An_Application">An Application</h2><p>The application example is a simple todo list which has a TodoList class (for rendering content) and a TodoApp class (maintains the state and renders the layout). Here’s the code:</p>
+<figure class="highlight js"><figcaption><span>React</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** @jsx React.DOM */</span></span><br><span class="line"><span class="keyword">var</span> TodoList = React.createClass(&#123;</span><br><span class="line">  render: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> createItem = <span class="function"><span class="keyword">function</span>(<span class="params">itemText</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="title">li</span>&gt;</span>&#123;itemText&#125;<span class="tag">&lt;/<span class="title">li</span>&gt;</span>;</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="title">ul</span>&gt;</span>&#123;this.props.items.map(createItem)&#125;<span class="tag">&lt;/<span class="title">ul</span>&gt;</span>;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">var</span> TodoApp = React.createClass(&#123;</span><br><span class="line">  getInitialState: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;items: [], text: <span class="string">''</span>&#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">  onChange: <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;text: e.target.value&#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">  handleSubmit: <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    e.preventDefault();</span><br><span class="line">    <span class="keyword">var</span> nextItems = <span class="keyword">this</span>.state.items.concat([<span class="keyword">this</span>.state.text]);</span><br><span class="line">    <span class="keyword">var</span> nextText = <span class="string">''</span>;</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123;items: nextItems, text: nextText&#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">  render: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="xml"><span class="tag">&lt;<span class="title">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">h3</span>&gt;</span>TODO<span class="tag">&lt;/<span class="title">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">TodoList</span> <span class="attribute">items</span>=<span class="value">&#123;this.state.items&#125;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">form</span> <span class="attribute">onSubmit</span>=<span class="value">&#123;this.handleSubmit&#125;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">input</span> <span class="attribute">onChange</span>=<span class="value">&#123;this.onChange&#125;</span> <span class="attribute">value</span>=<span class="value">&#123;this.state.text&#125;</span> /&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">button</span>&gt;</span>&#123;'Add #' + (this.state.items.length + 1)&#125;<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">form</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">    )</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line">React.renderComponent(<span class="xml"><span class="tag">&lt;<span class="title">TodoApp</span> /&gt;</span>, mountNode);</span></span><br></pre></td></tr></table></figure>
+<p>When writing this in Ember, we would use both a controller and a handlebars template. The controller will maintain the state and respond to user interaction and the template will display the form and list.</p>
+<figure class="highlight js"><figcaption><span>Ember (controller)</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">App.ApplicationController = Em.ArrayController.extend(&#123;</span><br><span class="line">  content: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [];</span><br><span class="line">  &#125;.property(),</span><br><span class="line"></span><br><span class="line">  btnLabel: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"Add #"</span> + (<span class="keyword">this</span>.get(<span class="string">'content.length'</span>) + <span class="number">1</span>);</span><br><span class="line">  &#125;.property(<span class="string">'content.length'</span>),</span><br><span class="line"></span><br><span class="line">  actions: &#123;</span><br><span class="line">    handleSubmit: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.get(<span class="string">'content'</span>).pushObject(<span class="keyword">this</span>.get(<span class="string">'text'</span>));</span><br><span class="line">      <span class="keyword">this</span>.set(<span class="string">'text'</span>, <span class="string">''</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<!--￼6-->
+
+
+<h3 id="Example:-2">Example:</h3><p><a class="jsbin-embed" href="http://jsbin.com/OkOLEze/4/embed?html,js,output" target="_blank" rel="external">Facebook React vs Ember</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h2 id="A_Component_Using_External_Plugins">A Component Using External Plugins</h2><p>This example on the React website under <em>A Component Using External Plugins</em> is a great example of encapsulating functionality.</p>
+
+<!--￼7-->
+
+
+<p>The caveat to this example is that it assumes that the <a href="https://github.com/coreyti/showdown" target="_blank" rel="external">showdown</a> library is already loaded. In our Ember example, note that the library is loaded in the <em>head</em>.</p>
+<figure class="highlight js"><figcaption><span>Ember (controller)</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">App.ApplicationRoute = Em.Route.extend(&#123;</span><br><span class="line">  model: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; value: <span class="string">'Type some *markdown* here!'</span> &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Em.Handlebars.registerBoundHelper(<span class="string">'markdown'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">str</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> converter = <span class="keyword">new</span> Showdown.converter();</span><br><span class="line">  <span class="keyword">var</span> html = converter.makeHtml(str || <span class="string">''</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> Handlebars.SafeString(html);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<!--￼9-->
+
+
+<p>I added Twitter Bootstrap to this example for cleanliness.</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/eyOlOFI/7/embed?js,output" target="_blank" rel="external">Facebook React vs Ember</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p>I haven’t spent enough time with React to be able to convert the <a href="http://www.emberjs.com" target="_blank" rel="external">Ember examples</a> to it, but I would love to see someone do that for a better comparison.</p>
+
+              </div>
+            </div>
+          </div>
+          
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="BlogPost__Author">
+                  <div class="row middle-xs">
+                    <div class="col-xs-1">
+                      
+                      
+                      <img class="Blog__Avatar" src="https://en.gravatar.com/userimage/2313670/31b6875622886c41f150245d58acbd0e.jpg?size=100" />
+                    </div>
+                    <div class="col-xs-9 start-xs">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorName">Eric Berry</span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorDescription"><a href="http://coderberry.me" target="_blank">Eric Berry</a> is a software engineer at <a href="http://www.instructure.com">Instructure</a> and loves giving back to the community via blog posts and meetups. He was a co-founder of <a href="http://h71028.www7.hp.com/enterprise/cache/504712-0-0-225-121.html">ShareAPhoto, Ltd</a>, a European online photo sharing company which was acquired by Hewlett-Packard in 2006. He was the author of <a href="http://www.amazon.com/Rails-Pocket-Reference-OReilly/dp/0596520700">Rails Pocket Reference</a> (published 2008 – O’Reilly). He spear-headed <a href="http://teachmetocode.com/screencasts/page/9/">TeachMeToCode.com</a>, a popular on-demand screencasting website dedicated to helping others learn how to program.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+          <div class="row">
+            <div class="col-xs-12">
+              
+              <section id="comments">
+                <div id="disqus_thread">
+                  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                </div>
+              </section>
+              
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<article id="post-facebook-react-vs-ember" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+
+    <footer class="article-footer">
+
+    </footer>
+  </div>
+
+</article>
+
+
+      <a id="page-top"></a>
+    </div>
+  </div>
+  
+  
+<script>
+  var disqus_shortname = 'canvasdevandfriends';
+  
+  var disqus_url = 'http://instructure.github.io//blog/2013/12/17/facebook-react-vs-ember/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+</body>
+</html>

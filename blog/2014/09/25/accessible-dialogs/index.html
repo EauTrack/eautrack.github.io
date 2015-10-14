@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Breaking the Rules: Accessible Dialog Components | Instructure Open Source</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Turns out, role=&amp;quot;dialog&amp;quot; isn’t your friend.
+Cursor ModesWhen you first start building accessible websites, you learn quicklythat there are different cursor modes when using Windows screen re">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Breaking the Rules: Accessible Dialog Components">
+<meta property="og:url" content="http://instructure.github.io/blog/2014/09/25/accessible-dialogs/index.html">
+<meta property="og:site_name" content="Instructure Open Source">
+<meta property="og:description" content="Turns out, role=&amp;quot;dialog&amp;quot; isn’t your friend.
+Cursor ModesWhen you first start building accessible websites, you learn quicklythat there are different cursor modes when using Windows screen re">
+<meta property="og:updated_time" content="2015-10-14T15:56:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Breaking the Rules: Accessible Dialog Components">
+<meta name="twitter:description" content="Turns out, role=&amp;quot;dialog&amp;quot; isn’t your friend.
+Cursor ModesWhen you first start building accessible websites, you learn quicklythat there are different cursor modes when using Windows screen re">
+  
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/js/app.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogHeader.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogIndex.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogPost.css" type="text/css">
+  
+
+</head>
+
+<body>
+  <div id="fb-root"></div>
+  <header class='BlogHeader__Container row'>
+  <div class='col-xs-12'>
+    <div class='BlogHeader__ColorStrip' />
+  </div>
+  <div class='row'>
+    <div class='col-xs-3'>
+      <a href='/'>
+        <div class='BlogHeader__Logo'></div>
+        <span class='sr-only'>Instructure Engineering</span>
+      </a>
+    </div>
+    <div class='col-xs-3 col-xs-offset-6'>
+      <div class='BlogHeader__Links'>
+        <ul class='BlogHeader__Links-List list-unstyled'>
+          <li><a href='/blog'>Tech Blog</a></li>
+          <li><a href='http://www.instructure.com/careers/'>Work Here</a></li>
+        </ul>
+      </div>
+    </div>
+</header>
+  <div class="outer">
+    <div class="inner">
+      <div class="row center-xs">
+  <div class="col-xs-8">
+    <div class="row start-xs">
+      <div class="col-xs-12">
+        <article class="BlogPost">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header">
+                <div class="BlogPost__Header-Title">
+                  <h1 itemprop="name">
+                    <a href="/blog/2014/09/25/accessible-dialogs/">Breaking the Rules: Accessible Dialog Components</a>
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header-Date">
+                <a href="/blog/2014/09/25/accessible-dialogs/">
+                  <time datetime="2014-09-25T15:00:00.000Z" itemprop="datePublished">Sep 25, 2014</time>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Content" itemprop="articleBody">
+                <p>Turns out, <code>role=&quot;dialog&quot;</code> isn’t your friend.</p>
+<h2 id="Cursor_Modes">Cursor Modes</h2><p>When you first start building accessible websites, you learn quickly<br>that there are different cursor modes when using Windows screen readers,<br><a href="http://tink.co.uk/2014/09/understanding-screen-reader-interaction-modes/" target="_blank" rel="external">Léonie Watson explains them well here</a>.</p>
+<p>Certain element roles, like <code>application</code> and <code>dialog</code> will change the<br>mode of the cursor. Very often this is not what you want. Yes, It does<br>allow the developer to implement convenient keyboard events for the<br>component, but it disables the normal keyboard navigation shortcuts for<br>screen reader users. For sighted users, that would be a lot like opening<br>your page up in Internet Explorer 5.5 on a mac.</p>
+<a id="more"></a>
+<h2 id="The_Problem_With_ARIA_Dialogs">The Problem With ARIA Dialogs</h2><p>Unlike other components, dialogs and modals usually just contain regular<br>content like the rest of the website. They don’t need special keyboard<br>navigation implementations, except for handling the escape key to<br>request to close it.</p>
+<p>When you use <code>role=&quot;dialog&quot;</code> the forms/focus cursor mode is activated<br>and the screen reader user can’t interact with the content in the dialog<br>like they can with the rest of the website. In most cases, this results<br>in much of the content in the dialog becoming completely inaccessible to<br>them.</p>
+<h2 id="The_Solution">The Solution</h2><p>The solution is to “hide” everything in the application–except the<br>dialog–from the screen reader. This way the dialog can be navigated<br>normally and the rest of the app is inaccessible until the dialog closes.</p>
+<p>In a nutshell:</p>
+<ol>
+<li>Don’t use <code>role=&quot;dialog&quot;</code>, to avoid switching cursor modes.</li>
+<li>When a dialog opens, set <code>aria-hidden=&quot;true&quot;</code> on the rest of the<br>page and focus the content of the modal.</li>
+<li>When a dialog closes, remove the <code>aria-hidden</code> attribute and return<br>focus to the element that initiated it.</li>
+</ol>
+<p>The easiest thing to do is simply wrap your entire website in a<br>containing element and then just manage <code>aria-hidden</code> on that one<br>element instead of many.</p>
+<p>It would end up looking something like this:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span> ... <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"dialog"</span>&gt;</span> ... <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>And when the dialog is open:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span> <span class="attribute">aria-hidden</span>=<span class="value">"true"</span>&gt;</span> ... <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"dialog"</span>&gt;</span> ... <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="But_That’s_Not_The_Spec!">But That’s Not The Spec!</h2><p>The spec probably needs to change to support dialogs where forms mode<br>doesn’t make sense. We implemented this in order to get Canvas certified<br>as an accessible web application. The web moves fast and the specs don’t<br>always keep up.</p>
+<p>Until the specs catch up, and all the parties involved implement them,<br>we choose to focus on the experience of our users (oh, right, and<br><a href="http://webaim.org/services/certification/" target="_blank" rel="external">getting certified</a>).</p>
+
+              </div>
+            </div>
+          </div>
+          
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="BlogPost__Author">
+                  <div class="row middle-xs">
+                    <div class="col-xs-1">
+                      
+                      
+                      <img class="Blog__Avatar" src="http://www.gravatar.com/avatar/749001c9fe6927c4b069a45c2a3d68f7?s=100" />
+                    </div>
+                    <div class="col-xs-9 start-xs">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorName">Ryan Florence</span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorDescription">Ryan Florence heads up the Web Frameworks team at Instructure where they chase both squirrels and JavaScript frameworks, inviting the rest of the team to join them. Follow his adventures on <a href="https://github.com/rpflorence">Github</a> and <a href="http://twitter.com/ryanflorence">Twitter</a>.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+          <div class="row">
+            <div class="col-xs-12">
+              
+              <section id="comments">
+                <div id="disqus_thread">
+                  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                </div>
+              </section>
+              
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<article id="post-accessible-dialogs" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+
+    <footer class="article-footer">
+
+    </footer>
+  </div>
+
+</article>
+
+
+      <a id="page-top"></a>
+    </div>
+  </div>
+  
+  
+<script>
+  var disqus_shortname = 'canvasdevandfriends';
+  
+  var disqus_url = 'http://instructure.github.io//blog/2014/09/25/accessible-dialogs/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+</body>
+</html>

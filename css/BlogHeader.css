@@ -1,0 +1,19 @@
+.BlogHeader__ColorStrip {
+  margin-top: 0px;
+  height: 43px;
+  background: url('../img/color-strip.png') no-repeat top center;
+}
+
+.BlogHeader__Container {
+  height: 110px;
+  border-bottom: 2px solid gray;
+}
+
+.BlogHeader__Logo {
+  background: url('../img/eng-logo.png') no-repeat top center;
+  height: 45px;
+}
+
+.BlogHeader__Links-List {
+  text-transform: uppercase;
+}

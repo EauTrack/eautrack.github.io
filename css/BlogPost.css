@@ -1,0 +1,10 @@
+.BlogPost__Author {
+  border-bottom: 1px solid gray;
+  border-top: 1px solid gray;
+  margin: 30px 0;
+  padding: 10px 0;
+}
+
+.BlogPost__AuthorName {
+  font-weight: bold;
+}

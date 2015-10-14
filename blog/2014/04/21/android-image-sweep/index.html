@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ImageSweep : drawable management for Android | Instructure Open Source</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Software engineering is full of trade-offs: speed/memory usage, features/bugs, etc.The list goes on and on. The Android team here at Instructure found an interesting trade-off: developer-time versus a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ImageSweep : drawable management for Android">
+<meta property="og:url" content="http://instructure.github.io/blog/2014/04/21/android-image-sweep/index.html">
+<meta property="og:site_name" content="Instructure Open Source">
+<meta property="og:description" content="Software engineering is full of trade-offs: speed/memory usage, features/bugs, etc.The list goes on and on. The Android team here at Instructure found an interesting trade-off: developer-time versus a">
+<meta property="og:updated_time" content="2015-10-14T14:55:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ImageSweep : drawable management for Android">
+<meta name="twitter:description" content="Software engineering is full of trade-offs: speed/memory usage, features/bugs, etc.The list goes on and on. The Android team here at Instructure found an interesting trade-off: developer-time versus a">
+  
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/js/app.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogHeader.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogIndex.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogPost.css" type="text/css">
+  
+
+</head>
+
+<body>
+  <div id="fb-root"></div>
+  <header class='BlogHeader__Container row'>
+  <div class='col-xs-12'>
+    <div class='BlogHeader__ColorStrip' />
+  </div>
+  <div class='row'>
+    <div class='col-xs-3'>
+      <a href='/'>
+        <div class='BlogHeader__Logo'></div>
+        <span class='sr-only'>Instructure Engineering</span>
+      </a>
+    </div>
+    <div class='col-xs-3 col-xs-offset-6'>
+      <div class='BlogHeader__Links'>
+        <ul class='BlogHeader__Links-List list-unstyled'>
+          <li><a href='/blog'>Tech Blog</a></li>
+          <li><a href='http://www.instructure.com/careers/'>Work Here</a></li>
+        </ul>
+      </div>
+    </div>
+</header>
+  <div class="outer">
+    <div class="inner">
+      <div class="row center-xs">
+  <div class="col-xs-8">
+    <div class="row start-xs">
+      <div class="col-xs-12">
+        <article class="BlogPost">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header">
+                <div class="BlogPost__Header-Title">
+                  <h1 itemprop="name">
+                    <a href="/blog/2014/04/21/android-image-sweep/">ImageSweep : drawable management for Android</a>
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header-Date">
+                <a href="/blog/2014/04/21/android-image-sweep/">
+                  <time datetime="2014-04-21T13:29:00.000Z" itemprop="datePublished">Apr 21, 2014</time>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Content" itemprop="articleBody">
+                <p>Software engineering is full of trade-offs: speed/memory usage, features/bugs, etc.<br>The list goes on and on. The Android team here at Instructure found an interesting trade-off: developer-time versus application size.<br>As we get new icons/images from our UI/UX team, we have two choices: bundle all of them into the application or add them as they’re needed in our project.<br>The trade-off becomes relatively straight-forward: either we spend time constantly adding images to our project or the user has to deal with their size when they install our application.</p>
+<p>At a high-level, the solution is simple: find all the unused drawables in the project and remove them when you build for release.<br>Historically that’s been a tedious and error-prone process, but not anymore.<br>I’m proud to announce a new open-source script from Instructure: <a href="https://github.com/instructure/android-ImageSweep" target="_blank" rel="external">ImageSweep</a>.<br>It will run through every file in your project and check for references to drawable resources using regular expressions to check for instances of <em>R.drawable.</em> and <em>@drawable/</em>.<br>The script will then iterate through the resource folder and delete ALL unused drawable resources.</p>
+<p>It’s extremely easy to use. Simply run:</p>
+<pre><code>python ImageSweep<span class="class">.py</span> project_src_directory
+</code></pre><p>where <code>project_src_directory</code> is the relative or absolute file-path where your source code lives.<br>Make sure the chosen directory contains <em>all</em> of your source code and AndroidManifest.xml, but none of the libraries you’ve included. The script auto-determines where the project’s resource folder is and libraries can potentially break this detection.</p>
+<p>We recently added this script to our release process for <a href="https://play.google.com/store/apps/details?id=com.instructure.candroid" target="_blank" rel="external">Canvas for Android</a>.<br>In that project, we were able to delete 2,593 files for a total of 72.37 Mbs freed on disk.<br>This correlated to a <em>46%</em> size decrease on the apk itself and <em>26%</em> size decrease on the installed application.</p>
+<p>To get started, visit the <a href="https://github.com/instructure/android-ImageSweep" target="_blank" rel="external">project homepage</a>. Take note of the warnings in the README prior to using the script.</p>
+
+              </div>
+            </div>
+          </div>
+          
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="BlogPost__Author">
+                  <div class="row middle-xs">
+                    <div class="col-xs-1">
+                      
+                      
+                      <img class="Blog__Avatar" src="http://www.gravatar.com/avatar/faf5c989b271194b73d0907227a5f274?d=mm" />
+                    </div>
+                    <div class="col-xs-9 start-xs">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorName">Josh Ruesch</span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorDescription"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+          <div class="row">
+            <div class="col-xs-12">
+              
+              <section id="comments">
+                <div id="disqus_thread">
+                  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                </div>
+              </section>
+              
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<article id="post-android-image-sweep" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+
+    <footer class="article-footer">
+
+    </footer>
+  </div>
+
+</article>
+
+
+      <a id="page-top"></a>
+    </div>
+  </div>
+  
+  
+<script>
+  var disqus_shortname = 'canvasdevandfriends';
+  
+  var disqus_url = 'http://instructure.github.io//blog/2014/04/21/android-image-sweep/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+</body>
+</html>

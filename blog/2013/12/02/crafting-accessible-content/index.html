@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Crafting accessible content | Instructure Open Source</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="At Instructure, we’re moving more and more of our app to the client with technologies like Ember.js. While it and other JavaScript frameworks have made this transition easier, they’ve also introduced">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Crafting accessible content">
+<meta property="og:url" content="http://instructure.github.io/blog/2013/12/02/crafting-accessible-content/index.html">
+<meta property="og:site_name" content="Instructure Open Source">
+<meta property="og:description" content="At Instructure, we’re moving more and more of our app to the client with technologies like Ember.js. While it and other JavaScript frameworks have made this transition easier, they’ve also introduced">
+<meta property="og:updated_time" content="2015-10-14T13:16:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Crafting accessible content">
+<meta name="twitter:description" content="At Instructure, we’re moving more and more of our app to the client with technologies like Ember.js. While it and other JavaScript frameworks have made this transition easier, they’ve also introduced">
+  
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/js/app.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogHeader.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogIndex.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogPost.css" type="text/css">
+  
+
+</head>
+
+<body>
+  <div id="fb-root"></div>
+  <header class='BlogHeader__Container row'>
+  <div class='col-xs-12'>
+    <div class='BlogHeader__ColorStrip' />
+  </div>
+  <div class='row'>
+    <div class='col-xs-3'>
+      <a href='/'>
+        <div class='BlogHeader__Logo'></div>
+        <span class='sr-only'>Instructure Engineering</span>
+      </a>
+    </div>
+    <div class='col-xs-3 col-xs-offset-6'>
+      <div class='BlogHeader__Links'>
+        <ul class='BlogHeader__Links-List list-unstyled'>
+          <li><a href='/blog'>Tech Blog</a></li>
+          <li><a href='http://www.instructure.com/careers/'>Work Here</a></li>
+        </ul>
+      </div>
+    </div>
+</header>
+  <div class="outer">
+    <div class="inner">
+      <div class="row center-xs">
+  <div class="col-xs-8">
+    <div class="row start-xs">
+      <div class="col-xs-12">
+        <article class="BlogPost">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header">
+                <div class="BlogPost__Header-Title">
+                  <h1 itemprop="name">
+                    <a href="/blog/2013/12/02/crafting-accessible-content/">Crafting accessible content</a>
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header-Date">
+                <a href="/blog/2013/12/02/crafting-accessible-content/">
+                  <time datetime="2013-12-02T16:52:00.000Z" itemprop="datePublished">Dec 02, 2013</time>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Content" itemprop="articleBody">
+                <p>At Instructure, we’re moving more and more of our app to the client with technologies like <a href="http://emberjs.com" target="_blank" rel="external">Ember.js</a>. While it and other JavaScript frameworks have made this transition easier, they’ve also introduced new challenges around keeping our content accessible.</p>
+<p>The old advice we’ve all heard about using semantic markup, headers, and <code>alt</code> attributes on <code>&lt;img /&gt;</code> tags is still true, but it doesn’t address how we can best develop accessible content in a rich client application. Despite rumors to the contrary, rich content <em>can</em> be accessible if we pay attention to a few basics.</p>
+<a id="more"></a>
+<h2 id="Getting_started_with_accessibility">Getting started with accessibility</h2><blockquote><p>The Web is fundamentally designed to work for all people, whatever their hardware, software, language, culture, location, or physical or mental ability. When the Web meets this goal, it is accessible to people with a diverse range of hearing, movement, sight, and cognitive ability.</p>
+<footer><strong>W3</strong><cite><a href="http://www.w3.org/standards/webdesign/accessibility" target="_blank" rel="external">www.w3.org/standards/webdesign/accessibility</a></cite></footer></blockquote>
+<p>Let’s start with a few definitions:</p>
+<ul>
+<li><strong>Accessibility</strong>: Web content is accessible when it usable by persons with disabilities. While this includes users of screen readers, it also includes persons with cognitive and other disabilities.</li>
+<li><strong>WAI-ARIA</strong>: A suite of technologies designed to make rich Internet applications accessible to users with disabilities.</li>
+</ul>
+<p>Authoring accessible rich content most often means (1) using WAI-ARIA attributes such as <code>role</code> and <code>aria-expanded</code> to mark-up content in a machine-parseable way; (2) ensuring that all content is keyboard navigable; and (3) managing page focus.</p>
+<p>So what does all of this mean when you’re developing widgets? Let’s take a look at an example of a button set component.</p>
+<h2 id="Building_a_button_set">Building a button set</h2><p>We’re going to build an accessible <a href="http://getbootstrap.com/components/#btn-groups" target="_blank" rel="external">button set</a> using Twitter’s Bootstrap styles and jQuery.</p>
+<p>Our button set is going to work like a filter, so users can only select one button at a time. This means it’s like a radio button. Watch how we can use aria roles and attributes to convey that behavior to non-sighted users:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"btn-group"</span> <span class="attribute">role</span>=<span class="value">"radiogroup"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"button"</span></span><br><span class="line">          <span class="attribute">class</span>=<span class="value">"btn btn-default active"</span></span><br><span class="line">          <span class="attribute">role</span>=<span class="value">"radio"</span></span><br><span class="line">          <span class="attribute">aria-checked</span>=<span class="value">"true"</span>&gt;</span>Open<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"button"</span></span><br><span class="line">          <span class="attribute">class</span>=<span class="value">"btn btn-default"</span></span><br><span class="line">          <span class="attribute">role</span>=<span class="value">"radio"</span></span><br><span class="line">          <span class="attribute">aria-checked</span>=<span class="value">"false"</span>&gt;</span>Closed<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>First, notice that we didn’t change Twitter’s recommended button set markup &mdash; we only augmented it with the <code>role</code> attributes and an <code>aria-checked</code> attribute. The <code>role</code> attribute describes the component’s behavior to screen readers, and <code>aria-checked</code> attribute notifies users of the current option in the same way that the <code>active</code> class does for sighted users.</p>
+<p>Here’s the JavaScript to make this happen:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$.fn.buttonset = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  $(<span class="keyword">this</span>).on(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $target = $(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">    $target.siblings()</span><br><span class="line">      .removeClass(<span class="string">'active'</span>)</span><br><span class="line">      .attr(<span class="string">'aria-checked'</span>, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">    $target</span><br><span class="line">      .addClass(<span class="string">'active'</span>)</span><br><span class="line">      .attr(<span class="string">'aria-checked'</span>, <span class="literal">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// usage</span></span><br><span class="line">$(<span class="string">'.btn-group .btn'</span>).buttonset();</span><br></pre></td></tr></table></figure>
+<p>While we’re defining this as a jQuery plugin, we could have just as easily made an Ember component, an Angular directive, or a Backbone view.</p>
+<p>We’ve found that this level is often the best place for dealing with accessibility. By handling accessibility details in our reusable widgets and libraries we can code it once and benefit across our stack. New engineers can immediately start writing accessible code, and all engineers benefit from quick, accessible implementations of common patterns.</p>
+<p>In this case, our code is almost all standard jQuery. This solution doesn’t require us to manage focus or worry about keyboard navigation because buttons are already in the tab order, but often widget markup will need a <code>tabindex=-1</code> attribute and calls like <code>$(&#39;.item&#39;).focus()</code> to ensure that screen reader users aren’t lost on the page.</p>
+<p>Here’s our component in action (it’s easier to test with a screen reader if you pop out this example into its own page first):</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/OBoqALa/1/embed?output" target="_blank" rel="external">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h2 id="Testing_accessibility">Testing accessibility</h2><p>If you’re on a Mac, you already have the software you need to get started testing for accessibility. OSX ships with a screen reader, VoiceOver, that can be enabled in your System Preferences and activated by pressing Cmd-F5.</p>
+<p>If you’re on Windows, take a look at the free <a href="http://www.nvaccess.org/" target="_blank" rel="external">NVDA</a> or, if you’re doing professional development, the more widely used <a href="http://www.freedomscientific.com/products/fs/jaws-product-page.asp" target="_blank" rel="external">JAWS</a>.</p>
+<p>To ensure that everything we write is accessible, we test all new commits in VoiceOver and JAWS as well as in our supported browsers before merging to master. And while giving accessibility top priority alongside visual fidelity and layout initially slowed us down, we’ve long since adjusted and now have  better code and a better product.</p>
+<h2 id="Wrapping_up">Wrapping up</h2><p>Developing with accessibility in mind has been a great experience at Instructure. By starting with an eye to accessibility we’ve been able to leverage WAI-ARIA tools to create rich, accessible content in an unobtrusive way.</p>
+<h3 id="Additional_resources">Additional resources</h3><p>To learn more about accessibility, take a look at the W3’s <a href="http://www.w3.org/TR/wai-aria-practices" target="_blank" rel="external">Authoring Practices</a> document. It covers additional topics like keyboard shortcuts, managing focus, and properly labeling content. The Illinois Center of Information Technology and Web Accessibility also have a great <a href="http://test.cita.uiuc.edu/aria/" target="_blank" rel="external">collection of accessibility examples</a>.</p>
+
+              </div>
+            </div>
+          </div>
+          
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="BlogPost__Author">
+                  <div class="row middle-xs">
+                    <div class="col-xs-1">
+                      
+                      
+                      <img class="Blog__Avatar" src="http://www.gravatar.com/avatar/6907adfc0e0fd541a080db4cf46bafd7?d=mm" />
+                    </div>
+                    <div class="col-xs-9 start-xs">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorName">Zach Pendleton</span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorDescription"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+          <div class="row">
+            <div class="col-xs-12">
+              
+              <section id="comments">
+                <div id="disqus_thread">
+                  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                </div>
+              </section>
+              
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<article id="post-crafting-accessible-content" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+
+    <footer class="article-footer">
+
+    </footer>
+  </div>
+
+</article>
+
+
+      <a id="page-top"></a>
+    </div>
+  </div>
+  
+  
+<script>
+  var disqus_shortname = 'canvasdevandfriends';
+  
+  var disqus_url = 'http://instructure.github.io//blog/2013/12/02/crafting-accessible-content/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+</body>
+</html>

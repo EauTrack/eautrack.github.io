@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Continuous Integration | Instructure Open Source</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Parallelization, Selenium, AWS, and a CI server are common implementations for agileshops, and we are no exception. Since I’ve been here, maintenance hasn’tbeen a nightmare, nor has it been a dream. W">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Continuous Integration">
+<meta property="og:url" content="http://instructure.github.io/blog/2014/02/24/ci/index.html">
+<meta property="og:site_name" content="Instructure Open Source">
+<meta property="og:description" content="Parallelization, Selenium, AWS, and a CI server are common implementations for agileshops, and we are no exception. Since I’ve been here, maintenance hasn’tbeen a nightmare, nor has it been a dream. W">
+<meta property="og:updated_time" content="2015-10-14T14:54:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Continuous Integration">
+<meta name="twitter:description" content="Parallelization, Selenium, AWS, and a CI server are common implementations for agileshops, and we are no exception. Since I’ve been here, maintenance hasn’tbeen a nightmare, nor has it been a dream. W">
+  
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/js/app.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogHeader.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogIndex.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogPost.css" type="text/css">
+  
+
+</head>
+
+<body>
+  <div id="fb-root"></div>
+  <header class='BlogHeader__Container row'>
+  <div class='col-xs-12'>
+    <div class='BlogHeader__ColorStrip' />
+  </div>
+  <div class='row'>
+    <div class='col-xs-3'>
+      <a href='/'>
+        <div class='BlogHeader__Logo'></div>
+        <span class='sr-only'>Instructure Engineering</span>
+      </a>
+    </div>
+    <div class='col-xs-3 col-xs-offset-6'>
+      <div class='BlogHeader__Links'>
+        <ul class='BlogHeader__Links-List list-unstyled'>
+          <li><a href='/blog'>Tech Blog</a></li>
+          <li><a href='http://www.instructure.com/careers/'>Work Here</a></li>
+        </ul>
+      </div>
+    </div>
+</header>
+  <div class="outer">
+    <div class="inner">
+      <div class="row center-xs">
+  <div class="col-xs-8">
+    <div class="row start-xs">
+      <div class="col-xs-12">
+        <article class="BlogPost">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header">
+                <div class="BlogPost__Header-Title">
+                  <h1 itemprop="name">
+                    <a href="/blog/2014/02/24/ci/">Continuous Integration</a>
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header-Date">
+                <a href="/blog/2014/02/24/ci/">
+                  <time datetime="2014-02-24T18:04:00.000Z" itemprop="datePublished">Feb 24, 2014</time>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Content" itemprop="articleBody">
+                <p>Parallelization, Selenium, AWS, and a CI server are common implementations for agile<br>shops, and we are no exception. Since I’ve been here, maintenance hasn’t<br>been a nightmare, nor has it been a dream. We’ve learned a few things<br>to streamline our maintenance process and would love to share the things<br>that made our lives easier.</p>
+<p>When looking at what was eating up our time, we found the differences<br>between our CI environment and average developer’s environment was at<br>the forefront. Most of us at Instructure use Macs, a few of us Windows,<br>and there are a handful Linux users. Among us, browser choice varies,<br>but the most popular is Chrome. Engineers develop locally using their<br>own OS, browser type/version and the Ruby Selenium driver to power<br>tests. Listed below are a few of the differences we found:</p>
+<ol>
+<li>AWS images were Ubuntu</li>
+<li>Variance in browser versions</li>
+<li>Selenium grid uses Java stand alone server VS local specs running using native Ruby driver</li>
+<li>Variance in native event capabilities VS Jenkins running exclusively using native events</li>
+<li>Parallelization in CI vs single threaded specs in developer’s environment</li>
+</ol>
+<a id="more"></a>
+<p>We began to strive for consistency between the average dev environment and<br>the CI environments, where we could, without sacraficing production like implementation.<br>This helped with mitigating many intermittency issues. During this<br>process, it simplified the CI upgrade process while edging maintenance<br>towards dreamland and further from Elm St.</p>
+<p>So, what did we do to make this happen? First, all logic for Selenium<br>driver code was changed from Selenium grid\Java stand-alone server to<br>the native Ruby Selenium driver. This change immediately resulted in<br>noticeable stability improvements, and easier resolution for<br>intermittency creep from tests.</p>
+<p>In the past, we had challenges reproducing errors, locally, that our CI<br>server would throw because of the variance in environments. We spent a<br>lot of time debugging these errors, and had to create CI environments<br>that devs could SSH into, to debug the spec failures. This was highly<br>inefficient, and not consistent with the nature or true purpose of CI.<br>Making the two environments consistent gave us more time to work on<br>other things, instead of time-consuming and meaningless failures that were challenging and<br>intensive to debug. Now we are easily able to (for the most part)<br>reproduce all errors produced by our CI server.</p>
+<p>Along the way, we also found Selenium grid was not the ideal solution for us.<br>The main reason being the variance in spec outcomes<br>between dev environments and CI, resulting in too much overhead for<br>maintenance and upgrades, while also sapping dev time on CI spec<br>debugging. Many shops use a hardware infrastructure that is distributed<br>across multiple boxes and the tests are farmed out to them; this is<br>ideal for Selenium grid. We, however, prefer one big box with<br>parallelization done internally, reducing the need for a Java stand-alone<br>server and Selenium grid. Capabilities for the drivers are consumed from<br>config files written at runtime for different browsers and we have no<br>need to push each test to a Selenium hub to be farmed out to a worker.<br>We found this complicated setup offered little reward and brought on<br>noticeable burden in maintenance and stability while introducing a<br>variance in spec outcomes.</p>
+<p>Making these changes made our lives noticeably easier. When managing<br>or implementing a CI environment, we believe it’s prudent to not only consider your core<br>tech architecture, but the relationship with your developer’s workflow.<br>Although complex implementations of Selenium grid and multiple browsers can be beneficial,<br>it may add more complications than are worth it.<br>We recommend a lean implementation of Selenium, using the driver of the native application<br>language for tighter integration and better maintenance with more consistency between test runs. </p>
+
+              </div>
+            </div>
+          </div>
+          
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="BlogPost__Author">
+                  <div class="row middle-xs">
+                    <div class="col-xs-1">
+                      
+                      
+                      <img class="Blog__Avatar" src="http://www.gravatar.com/avatar/4d9cab1788dd68f0f3eab2a987ab798a?d=mm" />
+                    </div>
+                    <div class="col-xs-9 start-xs">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorName">Shawn Meredith</span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorDescription"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+          <div class="row">
+            <div class="col-xs-12">
+              
+              <section id="comments">
+                <div id="disqus_thread">
+                  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                </div>
+              </section>
+              
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<article id="post-ci" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+
+    <footer class="article-footer">
+
+    </footer>
+  </div>
+
+</article>
+
+
+      <a id="page-top"></a>
+    </div>
+  </div>
+  
+  
+<script>
+  var disqus_shortname = 'canvasdevandfriends';
+  
+  var disqus_url = 'http://instructure.github.io//blog/2014/02/24/ci/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+</body>
+</html>

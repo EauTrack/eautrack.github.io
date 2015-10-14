@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Swift: Just Follow the Types | Instructure Open Source</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="As Mac and iOS craftsmen we’ve been given a new tool. In some ways it looks a lot like the old tool, a tool we’ve been using for many years now. In many ways it is very different. This tool is, of cou">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swift: Just Follow the Types">
+<meta property="og:url" content="http://instructure.github.io/blog/2015/02/05/just-follow-the-types/index.html">
+<meta property="og:site_name" content="Instructure Open Source">
+<meta property="og:description" content="As Mac and iOS craftsmen we’ve been given a new tool. In some ways it looks a lot like the old tool, a tool we’ve been using for many years now. In many ways it is very different. This tool is, of cou">
+<meta property="og:image" content="https://farm3.static.flickr.com/2658/4293485922_7474ef04ce.jpg">
+<meta property="og:updated_time" content="2015-10-14T15:58:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Swift: Just Follow the Types">
+<meta name="twitter:description" content="As Mac and iOS craftsmen we’ve been given a new tool. In some ways it looks a lot like the old tool, a tool we’ve been using for many years now. In many ways it is very different. This tool is, of cou">
+  
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/js/app.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogHeader.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogIndex.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogPost.css" type="text/css">
+  
+
+</head>
+
+<body>
+  <div id="fb-root"></div>
+  <header class='BlogHeader__Container row'>
+  <div class='col-xs-12'>
+    <div class='BlogHeader__ColorStrip' />
+  </div>
+  <div class='row'>
+    <div class='col-xs-3'>
+      <a href='/'>
+        <div class='BlogHeader__Logo'></div>
+        <span class='sr-only'>Instructure Engineering</span>
+      </a>
+    </div>
+    <div class='col-xs-3 col-xs-offset-6'>
+      <div class='BlogHeader__Links'>
+        <ul class='BlogHeader__Links-List list-unstyled'>
+          <li><a href='/blog'>Tech Blog</a></li>
+          <li><a href='http://www.instructure.com/careers/'>Work Here</a></li>
+        </ul>
+      </div>
+    </div>
+</header>
+  <div class="outer">
+    <div class="inner">
+      <div class="row center-xs">
+  <div class="col-xs-8">
+    <div class="row start-xs">
+      <div class="col-xs-12">
+        <article class="BlogPost">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header">
+                <div class="BlogPost__Header-Title">
+                  <h1 itemprop="name">
+                    <a href="/blog/2015/02/05/just-follow-the-types/">Swift: Just Follow the Types</a>
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header-Date">
+                <a href="/blog/2015/02/05/just-follow-the-types/">
+                  <time datetime="2015-02-05T21:11:00.000Z" itemprop="datePublished">Feb 05, 2015</time>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Content" itemprop="articleBody">
+                <p>As Mac and iOS craftsmen we’ve been given a new tool. In some ways it looks a lot like the old tool, a tool we’ve been using for many years now. In many ways it is very different. This tool is, of course, the Swift programming language.</p>
+<p>A strict type system is one thing that differentiates Swift from Objective-C.<a id="more"></a> This type system, along with other related features like generic types and custom operators, has started a movement among developers to adopt some techniques that Swift’s predecessor made difficult or impossible. Some of these language features and techniques come from the language Haskell, one of the many languages Chris Lattner <a href="http://nondot.org/sabre/" target="_blank" rel="external">drew inspiration from in creating Swift</a>.</p>
+<img src="https://farm3.static.flickr.com/2658/4293485922_7474ef04ce.jpg" class="right half" width="375" height="500" title="An old rusty tool. An old rusty tool.">
+<p>As I try to learn and adopt these new techniques I feel a bit like a woodworker who’s been given a new tool, one with new features that I don’t completely understand. One trick I’ve learned is that with such a strong type system comes certain affordances.</p>
+<p>Let’s look at an example.</p>
+<p><code>Optional</code> has a method called <code>map</code>. Now if you’ve used <code>map</code> functions that are common for collection types you might be able to intuit what this map function does. An <code>Optional</code> isn’t an array, however, so it might still be a little confusing. But if you take a moment to inspect the type of <code>map</code> you will see the trail of breadcrumbs.<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">map</span><span class="generics">&lt;U&gt;</span><span class="params">(f: <span class="params">(T)</span></span></span> -&gt; <span class="type">U</span>) -&gt; <span class="type">U</span>?</span><br></pre></td></tr></table></figure></p>
+<p>Here we can see that map takes a single function from <code>(T)-&gt;U</code> as a parameter and returns an <code>U?</code> (which is just nice syntax for <code>Optional&lt;U&gt;</code>) as a result. Remember that <code>T</code> is the generic parameter type of the <code>Optional</code> on which you are calling <code>map</code>. This effectively allows us to take an object wrapped up in an <code>Optional</code> <a href="http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html" target="_blank" rel="external">context</a> and apply a function to it resulting in an <code>Optional</code> object of the given function’s return type.</p>
+<p>Higher order functions like <code>map</code> are common in functional programming languages. For example, Haskell defines a function <code>fmap</code> that performs the same operation as <code>Optional.map</code>. Haskell programmers use this function so often that they’ve even given it an operator: <code>&lt;$&gt;</code>, and many Swift programmers are <a href="https://github.com/typelift/swiftz" target="_blank" rel="external">following suit</a> (though, due to some limitations on special characters in Swift, most implementations seem to have settled on <code>&lt;^&gt;</code> for that paricular operation).</p>
+<p>When confronted with new symbols and <a href="http://chris.eidhof.nl/posts/json-parsing-in-swift.html" target="_blank" rel="external">unfamiliar techniques for solving problems</a> in a strictly typed language like Swift, I find it helps to follow the types.</p>
+<p>Photo by <a href="https://www.flickr.com/photos/hortulus_aptus/" target="_blank" rel="external">Seán A. O’Hara</a>. Licensed under <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="external">CC BY 2.0</a>.</p>
+
+              </div>
+            </div>
+          </div>
+          
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="BlogPost__Author">
+                  <div class="row middle-xs">
+                    <div class="col-xs-1">
+                      
+                      
+                      <img class="Blog__Avatar" src="http://0.gravatar.com/avatar/43f93ddd5058f44ffe579d923945117a" />
+                    </div>
+                    <div class="col-xs-9 start-xs">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorName">Derrick Hathaway</span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorDescription">Derrick Hathaway is a Sr. Mobile Engineer at Instructure. He is currently working on making Instructure's iOS apps more awesome! <br /> <a href="https://github.com/derrh">Github</a> and <a href="http://twitter.com/derrh">Twitter</a>.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+          <div class="row">
+            <div class="col-xs-12">
+              
+              <section id="comments">
+                <div id="disqus_thread">
+                  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                </div>
+              </section>
+              
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<article id="post-just-follow-the-types" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+
+    <footer class="article-footer">
+
+    </footer>
+  </div>
+
+</article>
+
+
+      <a id="page-top"></a>
+    </div>
+  </div>
+  
+  
+<script>
+  var disqus_shortname = 'canvasdevandfriends';
+  
+  var disqus_url = 'http://instructure.github.io//blog/2015/02/05/just-follow-the-types/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+</body>
+</html>

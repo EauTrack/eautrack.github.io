@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Faster I18n Backend for Ruby Written in C | Instructure Open Source</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Every so often, we like to do a hack(fest|stravaganza|nado) here atInstructure. It’s an opportunity for engineers to spend several daysbuilding something cool to improve Canvas.
+For our inaugural hack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Faster I18n Backend for Ruby Written in C">
+<meta property="og:url" content="http://instructure.github.io/blog/2014/01/07/faster-ruby-i18n-backend-written-in-c/index.html">
+<meta property="og:site_name" content="Instructure Open Source">
+<meta property="og:description" content="Every so often, we like to do a hack(fest|stravaganza|nado) here atInstructure. It’s an opportunity for engineers to spend several daysbuilding something cool to improve Canvas.
+For our inaugural hack">
+<meta property="og:updated_time" content="2015-10-14T14:36:02.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Faster I18n Backend for Ruby Written in C">
+<meta name="twitter:description" content="Every so often, we like to do a hack(fest|stravaganza|nado) here atInstructure. It’s an opportunity for engineers to spend several daysbuilding something cool to improve Canvas.
+For our inaugural hack">
+  
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/js/app.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogHeader.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogIndex.css" type="text/css">
+  <link rel="stylesheet" href="/css/BlogPost.css" type="text/css">
+  
+
+</head>
+
+<body>
+  <div id="fb-root"></div>
+  <header class='BlogHeader__Container row'>
+  <div class='col-xs-12'>
+    <div class='BlogHeader__ColorStrip' />
+  </div>
+  <div class='row'>
+    <div class='col-xs-3'>
+      <a href='/'>
+        <div class='BlogHeader__Logo'></div>
+        <span class='sr-only'>Instructure Engineering</span>
+      </a>
+    </div>
+    <div class='col-xs-3 col-xs-offset-6'>
+      <div class='BlogHeader__Links'>
+        <ul class='BlogHeader__Links-List list-unstyled'>
+          <li><a href='/blog'>Tech Blog</a></li>
+          <li><a href='http://www.instructure.com/careers/'>Work Here</a></li>
+        </ul>
+      </div>
+    </div>
+</header>
+  <div class="outer">
+    <div class="inner">
+      <div class="row center-xs">
+  <div class="col-xs-8">
+    <div class="row start-xs">
+      <div class="col-xs-12">
+        <article class="BlogPost">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header">
+                <div class="BlogPost__Header-Title">
+                  <h1 itemprop="name">
+                    <a href="/blog/2014/01/07/faster-ruby-i18n-backend-written-in-c/">Faster I18n Backend for Ruby Written in C</a>
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Header-Date">
+                <a href="/blog/2014/01/07/faster-ruby-i18n-backend-written-in-c/">
+                  <time datetime="2014-01-07T14:32:00.000Z" itemprop="datePublished">Jan 07, 2014</time>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="BlogPost__Content" itemprop="articleBody">
+                <p>Every so often, we like to do a hack(fest|stravaganza|nado) here at<br>Instructure. It’s an opportunity for engineers to spend several days<br>building something cool to improve <a href="https://github.com/instructure/canvas-lms" target="_blank" rel="external">Canvas</a>.</p>
+<p>For our inaugural hackthing back in May, I worked on the problem of having<br>lots of objects in memory in Ruby 1.9. Ruby uses a mark-and-sweep garbage<br>collector, so the more Ruby objects you have in memory, the longer each GC<br>run will take. This can be a significant contributor to slow page loads in<br>a large Rails app like Canvas.</p>
+<a id="more"></a>
+<p>At the time, Canvas was localized in 7 languages (we’re now up to 15). We<br>use the excellent <a href="https://github.com/svenfuchs/i18n" target="_blank" rel="external">I18n gem</a> with a<br><a href="https://github.com/instructure/canvas-lms/blob/stable/config/initializers/i18n.rb" target="_blank" rel="external">few</a><br><a href="https://github.com/instructure/canvas-lms/blob/stable/lib/tasks/i18n.rake" target="_blank" rel="external">handy</a><br><a href="https://github.com/instructure/canvas-lms/tree/stable/lib/i18n_extraction" target="_blank" rel="external">extensions</a><br>of our own. While I18n’s default in-memory backend is plenty fast, it<br>comes at the cost of having all of those strings in memory. Every new<br>language you add or feature you implement makes the GC problem even worse.</p>
+<p>Because localization strings should be static for the lifetime of a Rails<br>process, there is no reason the garbage collector needs to know about them<br>at all. But we still want to keep them in memory for optimal speed.</p>
+<p>Enter <a href="https://github.com/instructure/i18nema" target="_blank" rel="external">I18nema</a>, a fast I18n<br>backend that unstops the garbage collector and gets everything running<br>quickly and smoothly :).</p>
+<h2 id="What_Is_an_I18nema?">What Is an I18nema?</h2><p>At its core, I18nema is a Ruby C extension that moves I18n’s translations<br>out of Ruby-land and into C structs. It also includes a handful of other<br>optimizations to I18n, leading to some nice all around speedups.</p>
+<h2 id="How_Is_It_Administered?">How Is It Administered?</h2><p>In your Gemfile, do</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem <span class="constant">RUBY_VERSION</span> &gt;= <span class="string">'2.0'</span> ? <span class="string">'i18nema'</span> <span class="symbol">:</span> <span class="string">'i18nema19'</span></span><br></pre></td></tr></table></figure>
+<p>and then put something like this in an initializer:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">I18n</span>.backend = <span class="constant">I18nema::Backend</span>.new</span><br></pre></td></tr></table></figure>
+<p>You can still pull in additional I18n features (e.g. <code>I18n::Backend::Fallbacks</code>).<br>Refer to <a href="https://github.com/instructure/i18nema/blob/master/README.md" target="_blank" rel="external">the README</a><br>for more information.</p>
+<h2 id="How_Will_It_Improve_My_Quality_of_Life?">How Will It Improve My Quality of Life?</h2><h3 id="More_Get-Up-and-Go">More Get-Up-and-Go</h3><p>I18nema loads translations into memory much more quickly—<strong>over 4x!</strong>—<br>making for much faster Rails startup time. While this is just a one time<br>hit, it’s very noticeable when you’re waiting on it (e.g. console, specs).<br>In Canvas, I18nema brings it down to a little over a second (from almost<br>6).</p>
+<h3 id="Minimal_Blockage">Minimal Blockage</h3><p>Because there are fewer Ruby objects, the periodic GC runs are<br>proportionally faster with I18nema. That means faster page loads for your<br>users.</p>
+<p>How much faster is a question of how many translations you have versus how<br>many other Ruby objects. Applications that are localized in more languages<br>should see a bigger boost (since the translations make up a bigger share<br>of the original ObjectSpace).</p>
+<p>For example, Canvas is translated into fifteen languages, and I18nema<br>reduces both (startup) ObjectSpace and GC runtime by <strong>about 15%</strong>. As more<br>languages are added, that number should only increase.</p>
+<p>I18nema also moves I18n’s normalized_key_cache into C structs. This key<br>cache grows over time (it eventually holds a key/value for every<br>translation key used in the app), so that’s another area where I18nema is<br>nicer on ObjectSpace than vanilla I18n.</p>
+<h3 id="More_Pep_in_Your_Step">More Pep in Your Step</h3><p>I18nema speeds up <code>translate</code> calls, getting the right text to your users<br>more quickly.</p>
+<p>Simple lookups (i.e. no options or interpolation) take a bit <strong>over 15%</strong> less<br>time.</p>
+<p>Lookups with options see slightly bigger gains (<strong>over 20%</strong> less time), in<br>part due to some speedups on the Ruby side of things (I18n uses<br><code>Hash#except</code>, which is quite slow when you have a long list of<br>arguments).</p>
+<h2 id="Is_I18nema_Right_for_Me?">Is I18nema Right for Me?</h2><p>I18nema is not for everyone.</p>
+<p>If you’re still on Ruby 1.8, you should not use I18nema. Although I18nema<br>has been tested on Ruby 1.9, 2.0, and 2.1, it has only been benchmarked<br>on 1.9. You may find it less effective on 2.1, due to its <a href="http://tmm1.net/ruby21-rgengc/" target="_blank" rel="external">dramatic GC improvements</a>.</p>
+<p>When using I18nema, you should make sure that your translation files are<br>UTF-8. I18nema cannot be used with <code>.rb</code> translation files (only <code>.yml</code>)</p>
+<p>Refer to <a href="https://github.com/instructure/i18nema/blob/master/README.md" target="_blank" rel="external">the fine print</a><br>for more information and benchmarks.</p>
+
+              </div>
+            </div>
+          </div>
+          
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="BlogPost__Author">
+                  <div class="row middle-xs">
+                    <div class="col-xs-1">
+                      
+                      
+                      <img class="Blog__Avatar" src="http://www.gravatar.com/avatar/24370c7ed0f878cfed2997b97bce6669?d=mm" />
+                    </div>
+                    <div class="col-xs-9 start-xs">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorName">Jon Jensen</span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <span class="BlogPost__AuthorDescription"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+          <div class="row">
+            <div class="col-xs-12">
+              
+              <section id="comments">
+                <div id="disqus_thread">
+                  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                </div>
+              </section>
+              
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<article id="post-faster-ruby-i18n-backend-written-in-c" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+
+    <footer class="article-footer">
+
+    </footer>
+  </div>
+
+</article>
+
+
+      <a id="page-top"></a>
+    </div>
+  </div>
+  
+  
+<script>
+  var disqus_shortname = 'canvasdevandfriends';
+  
+  var disqus_url = 'http://instructure.github.io//blog/2014/01/07/faster-ruby-i18n-backend-written-in-c/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+</body>
+</html>
